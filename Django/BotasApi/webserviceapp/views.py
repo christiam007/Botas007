@@ -1,3 +1,4 @@
+from django.template.defaultfilters import safeseq
 from django.urls import path
 from django.http import JsonResponse
 
@@ -17,6 +18,10 @@ def suerte_nota(request):
 
 def array_json(request):
     return JsonResponse([1, 2, 3], safe=False)
+
+
+def arrayLetras_json(request):
+    return JsonResponse( ["a","b","c"], safe=False)
 
 
 

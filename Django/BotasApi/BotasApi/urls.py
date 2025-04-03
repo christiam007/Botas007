@@ -24,6 +24,7 @@ urlpatterns = [
     path('nombre', views.my_name, name='nombre'),
     path('alla_vamos',views.suerte_nota),
     path('array', views.array_json),
+    path('letras', views.arrayLetras_json),
 
 
 
