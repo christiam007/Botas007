@@ -5,6 +5,9 @@ from django.http import JsonResponse
 def my_first_endpoint_empty(request):
     return JsonResponse({})
 
+def my_name(request):
+    return JsonResponse({"nombre":"christian"})
+
 
 
 

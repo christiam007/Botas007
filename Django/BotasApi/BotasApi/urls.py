@@ -21,6 +21,8 @@ from webserviceapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('vacio', views.my_first_endpoint_empty),
+    path('nombre', views.my_name, name='nombre'),
+
 
 
 ]
