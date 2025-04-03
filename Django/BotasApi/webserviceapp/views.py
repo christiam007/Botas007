@@ -24,6 +24,10 @@ def arrayLetras_json(request):
     return JsonResponse( ["a","b","c"], safe=False)
 
 
+def arraynombres_json(request):
+    return JsonResponse([{"nombre":"Iago"}, {"Nombre":"Christian"}], safe=False)
+
+
 
 
 
