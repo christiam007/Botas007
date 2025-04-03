@@ -15,6 +15,9 @@ def suerte_nota(request):
     }
     return JsonResponse(json_diccionario)
 
+def array_json(request):
+    return JsonResponse([1, 2, 3], safe=False)
+
 
 
 

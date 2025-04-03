@@ -23,6 +23,7 @@ urlpatterns = [
     path('vacio', views.my_first_endpoint_empty),
     path('nombre', views.my_name, name='nombre'),
     path('alla_vamos',views.suerte_nota),
+    path('array', views.array_json),
 
 
 
