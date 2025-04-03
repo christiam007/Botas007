@@ -8,6 +8,13 @@ def my_first_endpoint_empty(request):
 def my_name(request):
     return JsonResponse({"nombre":"christian"})
 
+def suerte_nota(request):
+    json_diccionario={
+        "Suerte":"Mucha",
+        "nota": 10
+    }
+    return JsonResponse(json_diccionario)
+
 
 
 
