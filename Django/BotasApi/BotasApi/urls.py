@@ -26,6 +26,11 @@ urlpatterns = [
     path('array', views.array_json),
     path('letras', views.arrayLetras_json),
     path('compis', views.arraynombres_json),
+    path('articulos/<int:articulo_id>/', views.detalle_articulo),
+
+
+
+
 
 
 
