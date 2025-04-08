@@ -27,6 +27,7 @@ urlpatterns = [
     path('letras', views.arrayLetras_json),
     path('compis', views.arraynombres_json),
     path('articulos/<int:articulo_id>/', views.detalle_articulo),
+    path('productos/<str:categoria>/<int:id>/', views.mostrar_productos),
 
 
 
