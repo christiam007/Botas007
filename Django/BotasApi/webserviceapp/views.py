@@ -38,6 +38,10 @@ def mostrar_productos(request, categoria, id):
 def mostrar_productos_recibidos(request,articulo):
     return JsonResponse({"articulo":articulo})
 
+def solo_recibir_enteros(request, numero):
+
+    return JsonResponse({"Ok": "Mackey"})
+
 
 
 
