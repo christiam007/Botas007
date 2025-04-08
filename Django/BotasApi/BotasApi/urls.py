@@ -28,6 +28,8 @@ urlpatterns = [
     path('compis', views.arraynombres_json),
     path('articulos/<int:articulo_id>/', views.detalle_articulo),
     path('productos/<str:categoria>/<int:id>/', views.mostrar_productos),
+    path('devolver_parametros/<str:articulo>/', views.mostrar_productos_recibidos),
+
 
 
 

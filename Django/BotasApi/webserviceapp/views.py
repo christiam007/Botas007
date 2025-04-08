@@ -35,6 +35,11 @@ def mostrar_productos(request, categoria, id):
 
     return JsonResponse({"very": "good"})
 
+def mostrar_productos_recibidos(request,articulo):
+    return JsonResponse({"articulo":articulo})
+
+
+
 
 
 
