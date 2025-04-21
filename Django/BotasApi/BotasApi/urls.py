@@ -30,11 +30,9 @@ urlpatterns = [
     path('productos/<str:categoria>/<int:id>/', views.mostrar_productos),
     path('devolver_parametros/<str:articulo>/', views.mostrar_productos_recibidos),
     path('numeritos/<int:numero>/', views.solo_recibir_enteros),
-
-
-
-
-
+    path('listar', views.listarProductos),
+    path('producto/<int:id>', views.ver_producto),
+    path('buscar', views.buscar_productos),
 
 
 
