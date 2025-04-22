@@ -69,16 +69,21 @@ def buscar_productos(request):
     if categoria is None and precio is None:
         print("No mandaste nada!!!")
 
+        return JsonResponse({"mensaje": "No mandaste nada!!!"})
+
     elif categoria is None and precio is not None:
         print("Solo mandaste precio: El siguiente " + str(precio))
 
+        return JsonResponse({"mensaje": "Sólo mandaste precio: El siguiente " + precio })
+
     elif categoria is not None and precio is None:
-        print("o mandaste categoría: Es la siguiente" + str(categoria))
+        print("Solo mandaste categoría: Es la siguiente" + str(categoria))
+        return JsonResponse({ "mensaje": "Sólo mandaste categoría: Es la siguiente " + categoria })
 
     else:
-        print("Mandaste ambos por categoría: " + str(categoria) + "y precio:" + str(precio))
+        print("Mandaste ambos por categoria: " + str(categoria) + "y precio: " + str(precio))
 
-    return JsonResponse({"ok": "Mackey"})
+    return JsonResponse({ "mensaje": "Mandaste ambos" })
 
 
 
