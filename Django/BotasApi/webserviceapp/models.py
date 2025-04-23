@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
-
+"""
 class Profesor(models.Model):
     nombre = models.CharField(max_length=100)
 
@@ -39,3 +39,25 @@ class JugadorTorneo(models.Model):
 
     def __str__(self):
         return "Jugador -- " + str(self.jugador) + " Torneo -- " + str(self.torneo)
+
+"""
+
+
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=100)
+
+
+    def __str__(self):
+        return self.nombre
+
+class Bota(models.Model):
+    marca = models.CharField(max_length=100)
+    modelo = models.CharField(max_length=100)
+    talla = models.IntegerField(max_length=20)
+
+    def __str__(self):
+        return "marca: " + str(self.marca) + " modelo: " + str(self.modelo) + "talla: " + str(self.talla)
+
+
+
+
