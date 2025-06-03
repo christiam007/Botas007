@@ -1,3 +1,6 @@
+from idlelib.pyparse import trans
+from operator import truediv
+
 from django.db import models
 
 # Create your models here.
@@ -44,19 +47,23 @@ class JugadorTorneo(models.Model):
 
 
 class Usuario(models.Model):
-    nombre = models.CharField(max_length=100)
+    username = models.CharField(primary_key=True, max_length=50, default='user_temp')
+    name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100,null=True)
+    password = models.CharField(max_length=100)
+    token = models.CharField(max_length=255, blank=True, null=True)
 
 
     def __str__(self):
-        return self.nombre
+        return "username: " + str(self.username) + "name: " + str(self.name) + "surname: " + str(self.surname) + "password: " + str(self.password)
 
 class Bota(models.Model):
     marca = models.CharField(max_length=100)
     modelo = models.CharField(max_length=100)
-    talla = models.IntegerField(max_length=20)
+    talla = models.CharField(max_length=2)
 
     def __str__(self):
-        return "marca: " + str(self.marca) + " modelo: " + str(self.modelo) + "talla: " + str(self.talla)
+        return "marca: " + str(self.marca) + " modelo: " + str(self.modelo) + " talla: " + str(self.talla)
 
 
 

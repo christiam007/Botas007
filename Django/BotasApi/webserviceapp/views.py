@@ -1,7 +1,17 @@
+import json
+import secrets
+from venv import create
+
+from django.db.models import Q
+from django.db.models.fields import return_None
 from django.template.defaultfilters import safeseq
 from django.urls import path
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from unicodedata import category
+from urllib3 import request
+
+from webserviceapp.models import Bota, Usuario
 
 
 # Create your views here.
@@ -84,6 +94,164 @@ def buscar_productos(request):
         print("Mandaste ambos por categoria: " + str(categoria) + "y precio: " + str(precio))
 
     return JsonResponse({ "mensaje": "Mandaste ambos" })
+
+
+def search_the_bots(request, id):
+    if request.method != 'GET':
+        return JsonResponse({
+            'mensaje': 'Método no permitido'
+        }, status=405)
+
+    try:
+        bota = Bota.objects.get(id=id)
+    except Bota.DoesNotExist:
+        return JsonResponse({
+            'mensaje': 'Bota no encontrada'
+        }, status=404)
+
+
+    return JsonResponse({
+        'marca': bota.marca,
+        'modelo': bota.modelo,
+        'talla': bota.talla
+    }, status=200)
+
+def listar_botas(request):
+    #Metodo 1 (funcional)
+    botas = Bota.objects.all()
+    data=[]
+    for bota in botas:
+        data.append({
+            "id": bota.id,
+            "marca":bota.marca,
+            "modelo":bota.modelo,
+            "talla": bota.talla
+        })
+    return JsonResponse(data, safe=False, status=200)
+
+    """
+    Metodo 2 (Pythonic)
+
+    data = [{"id": bota.id} for bota in botas]
+
+    # Metodo 3 (funcional)
+    data = list(map(lambda x: {"id": x.id}, botas))
+    """
+
+
+def lista_usuarios(request):
+    usuarios = Usuario.objects.all()
+    data=[{"id":usuario.id,"nombre":usuario.nombre} for usuario in usuarios]
+
+    return JsonResponse(data, safe=False, status=200)
+
+
+@csrf_exempt
+def botas(request):
+    if request.method != 'GET':
+        return JsonResponse({'Error': 'Metodo no permitido. Solo se acepta get.'}, status=405)
+
+    s = request.GET.get("search")
+    if s is None:
+        botas = Bota.objects.all()
+    else:
+        botas = Bota.objects.filter (Q(modelo__icontains=s) | Q(marca__icontains=s) | Q(talla__icontains=s))
+
+    data = []
+    for bota in botas:
+        data.append({
+            'id': bota.id,
+            'marca': bota.marca,
+            'modelo': bota.modelo,
+            'talla': bota.talla
+        })
+
+    return JsonResponse({'botas': data})
+
+@csrf_exempt
+def usuario(request):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        print(request.body)
+        return JsonResponse({'ok':'makey'})
+
+
+
+@csrf_exempt
+def registro(request):
+    if request.method != 'POST':
+        return JsonResponse({'Error': 'Metodo no soportado, ingrese un POST'}, status=405)
+
+    json_registro = json.loads(request.body)
+    print(json_registro)
+
+    username = json_registro.get('username')
+    name   = json_registro.get('name')
+    surname  = json_registro.get('surname')
+    password = json_registro.get('password')
+
+    Usuario.objects.create(username=username, name=name, surname=surname, password=password)
+
+    return JsonResponse({'mensaje':'usuario creado'}, status=201)
+
+
+@csrf_exempt
+def login(request):
+    if request.method != 'POST':
+        return JsonResponse({'Error': 'Metodo no soportado, ingrese Post'}, status=405)
+
+    json_data = json.loads(request.body)
+    print(json_data)
+
+    username = json_data.get('username')
+    password = json_data.get('password')
+
+    try:
+        usuario = Usuario.objects.get(username = username)
+        token = secrets.token_urlsafe(32)
+
+        if password == usuario.password:
+            usuario.token = token
+            usuario.save()
+            print("La contraseña del " + usuario.username + " en BBDD es" + usuario.password)
+            return JsonResponse({'mensaje': 'Usuario y contraseña correcta'}, status=200)
+
+        return JsonResponse({'Error':'Contraseña incorrecta'}, status=401)
+
+    except Usuario.DoesNotExist:
+         return JsonResponse({'Error': 'Usuario no existe'}, status=404)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

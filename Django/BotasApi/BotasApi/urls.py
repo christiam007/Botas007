@@ -33,6 +33,14 @@ urlpatterns = [
     path('listar', views.listarProductos),
     path('producto/<int:id>', views.ver_producto),
     path('buscar', views.buscar_productos),
+    path('botas/<id>', views.search_the_bots),
+    path('listar_botas/', views.listar_botas),
+    path('usuarios/', views.lista_usuarios),
+    path('botas/', views.botas),
+    path('usuario/' , views.usuario),
+    path('registro/', views.registro),
+    path('login/', views.login)
+
 
 
 
