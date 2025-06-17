@@ -1,7 +1,9 @@
 import json
 import secrets
 from venv import create
+from wsgiref.util import request_uri
 
+import bcrypt
 from django.db.models import Q
 from django.db.models.fields import return_None
 from django.template.defaultfilters import safeseq
@@ -208,18 +210,68 @@ def login(request):
 
     try:
         usuario = Usuario.objects.get(username = username)
-        token = secrets.token_urlsafe(32)
 
-        if password == usuario.password:
+        password_hasheada = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')
+
+        token = secrets.token_hex(32)
+
+
+        if bcrypt.checkpw(password.encode('utf8'), usuario.password.encode('utf8')):
             usuario.token = token
             usuario.save()
-            print("La contraseña del " + usuario.username + " en BBDD es" + usuario.password)
-            return JsonResponse({'mensaje': 'Usuario y contraseña correcta'}, status=200)
+
+            return JsonResponse({'token':token}, status=200)
 
         return JsonResponse({'Error':'Contraseña incorrecta'}, status=401)
 
     except Usuario.DoesNotExist:
          return JsonResponse({'Error': 'Usuario no existe'}, status=404)
+
+
+@csrf_exempt
+def subir_bota(request):
+
+    t = request.headers.get('token')
+
+
+    if not t:
+        return JsonResponse({'mensaje':'No existe token!!'},status=401)
+
+    try:
+        usuario = Usuario.objects.get(token=t)
+    except Usuario.DoesNotExist:
+        return JsonResponse({'mensaje': 'token no es valido'}, status=401)
+
+    bota_json = json.loads(request.body)
+
+    marca = bota_json.get("marca")
+    modelo = bota_json.get("modelo")
+    talla = bota_json.get("talla")
+
+
+    Bota.objects.create(marca=marca, modelo=modelo, talla=talla,autor=usuario)
+
+    return JsonResponse({'Mensaje':'Bota cargada con existo'}, status=201)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

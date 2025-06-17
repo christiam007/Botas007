@@ -39,9 +39,7 @@ urlpatterns = [
     path('botas/', views.botas),
     path('usuario/' , views.usuario),
     path('registro/', views.registro),
-    path('login/', views.login)
-
-
-
+    path('login/', views.login),
+    path('subir_bota/', views.subir_bota)
 
 ]
