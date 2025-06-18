@@ -69,5 +69,12 @@ class Bota(models.Model):
         return "marca: " + str(self.marca) + " modelo: " + str(self.modelo) + " talla: " + str(self.talla)
 
 
+class Cinturon(models.Model):
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "marca: " + str(self.marca) + "modelo: " + str(self.modelo)
+
 
 

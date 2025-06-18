@@ -40,6 +40,7 @@ urlpatterns = [
     path('usuario/' , views.usuario),
     path('registro/', views.registro),
     path('login/', views.login),
-    path('subir_bota/', views.subir_bota)
+    path('subir_bota/', views.subir_bota),
+    path('listar_cinturon', views.listar_cinturon)
 
 ]

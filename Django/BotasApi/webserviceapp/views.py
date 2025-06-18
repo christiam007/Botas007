@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from unicodedata import category
 from urllib3 import request
 
-from webserviceapp.models import Bota, Usuario
+from webserviceapp.models import Bota, Usuario, Cinturon
 
 
 # Create your views here.
@@ -252,6 +252,31 @@ def subir_bota(request):
     Bota.objects.create(marca=marca, modelo=modelo, talla=talla,autor=usuario)
 
     return JsonResponse({'Mensaje':'Bota cargada con existo'}, status=201)
+
+
+def listar_cinturon(request):
+    if request.method != 'GET':
+        return JsonResponse({'Error':'Metodo no soportado, use Get'}, status=405)
+
+
+    cinturones = Cinturon.objects.all()
+
+    data = []
+
+    for cinturon in cinturones:
+        data.append({
+            'id':cinturon.id,
+            'marca':cinturon.marca,
+            'modelo':cinturon.modelo
+
+        })
+    return JsonResponse(data,safe=False,status=200)
+
+
+
+
+
+
 
 
 
