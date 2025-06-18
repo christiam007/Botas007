@@ -6,12 +6,14 @@ from wsgiref.util import request_uri
 import bcrypt
 from django.db.models import Q
 from django.db.models.fields import return_None
+from django.db.models.lookups import Exact
 from django.template.defaultfilters import safeseq
 from django.urls import path
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from unicodedata import category
 from urllib3 import request
+
 
 from webserviceapp.models import Bota, Usuario, Cinturon
 
@@ -118,27 +120,54 @@ def search_the_bots(request, id):
         'talla': bota.talla
     }, status=200)
 
+
+ #3  Añadir query param a botas __________________________________________________________________________________
 def listar_botas(request):
-    #Metodo 1 (funcional)
-    botas = Bota.objects.all()
-    data=[]
-    for bota in botas:
-        data.append({
-            "id": bota.id,
-            "marca":bota.marca,
-            "modelo":bota.modelo,
-            "talla": bota.talla
-        })
-    return JsonResponse(data, safe=False, status=200)
+    createdByUser = request.GET.get('createdByUser')
 
-    """
-    Metodo 2 (Pythonic)
+    if createdByUser and createdByUser.lower() == 'true':
+        createdByUser = True
 
-    data = [{"id": bota.id} for bota in botas]
+        t = request.headers.get('token')
 
-    # Metodo 3 (funcional)
-    data = list(map(lambda x: {"id": x.id}, botas))
-    """
+        if not t:
+            return JsonResponse({'mensaje': 'UUNo existe token'}, status=401)
+        try:
+            Usuario.objects.get(token=t)
+        except Usuario.DoesNotExist:
+            return JsonResponse({'mensaje': 'token no valido'}, status=401)
+
+            botas = Bota.objects.filter(username=username)
+
+            data = []
+            for bota in botas:
+                data.append({
+                    "id": bota.id,
+                    "marca": bota.marca,
+                    "modelo": bota.modelo,
+                    "talla": bota.talla
+                })
+
+            return JsonResponse(data, safe=False, status=200)
+
+
+    else:
+        createdByUser = False
+
+        if not createdByUser:
+            botas = Bota.objects.all()
+
+            data = []
+            for bota in botas:
+                data.append({
+                    'id': bota.id,
+                    "marca": bota.marca,
+                    "modelo": bota.modelo,
+                    "talla": bota.talla
+                })
+
+
+        return JsonResponse(data, safe=False, status=200)
 
 
 def lista_usuarios(request):
@@ -253,7 +282,7 @@ def subir_bota(request):
 
     return JsonResponse({'Mensaje':'Bota cargada con existo'}, status=201)
 
-
+#1 ejercicio CINTURON___________________________________________________________________________________________________
 def listar_cinturon(request):
     if request.method != 'GET':
         return JsonResponse({'Error':'Metodo no soportado, use Get'}, status=405)
@@ -270,6 +299,46 @@ def listar_cinturon(request):
             'modelo':cinturon.modelo
 
         })
+    return JsonResponse(data,safe=False,status=200)
+
+
+#2 Usuario iddd _____________________________________________________________________________________-
+def listar_usuarios(request, username, isLoggedIn=None):
+
+    if request.method != 'GET':
+        return JsonResponse({'Error': 'Metodo no soportado, use Get'}, status=405)
+
+
+    t = request.headers.get('token')
+    if not t:
+        return JsonResponse({'mensaje':'No existe token'},status=401)
+
+    try:
+        usuario = Usuario.objects.get(token=t)
+
+    except Usuario.DoesNotExist:
+        return JsonResponse({'mensaje':'token no valido'},status=401)
+
+
+    if request.user.is_authenticated:
+        try:
+            usuario = Usuario.objects.get(username=username)
+
+        except Usuario.DoesNotExist:
+            return JsonResponse({'Error':'Usuario no encontrado'}, status=404)
+
+
+
+    usuarios = Usuario.objects.filter(usuario=usuario)
+
+    data = [{
+        "usuario":usuario.usuario,
+        "nombre":usuario.nombre,
+        "apellido":usuario.apellido,
+        "is_admin":usuario.is_admin
+
+    }for usuario in usuarios]
+
     return JsonResponse(data,safe=False,status=200)
 
 

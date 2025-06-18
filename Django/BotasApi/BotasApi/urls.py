@@ -41,6 +41,8 @@ urlpatterns = [
     path('registro/', views.registro),
     path('login/', views.login),
     path('subir_bota/', views.subir_bota),
-    path('listar_cinturon', views.listar_cinturon)
+    path('listar_cinturon', views.listar_cinturon),
+    path('usuario/<str:username>', views.listar_usuarios)
+
 
 ]
